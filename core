@@ -1,0 +1,32 @@
+import openai
+import asyncio
+
+# Set your OpenAI API key here
+# It's recommended to use an environment variable for security
+# For this example, replace 'your-api-key' with your actual OpenAI API key
+openai.api_key = 'your-api-key'
+
+# Asynchronous function to send a prompt to OpenAI and get a response
+async def fetch_openai_response(prompt):
+    response = openai.Completion.create(engine="davinci", prompt=prompt, max_tokens=100)
+    return response.choices[0].text.strip()
+
+# List of different prompts to send
+prompts = [
+    "Translate 'Hello, world!' into Spanish.",
+    "What is the capital of France?",
+    "Write a poem about a sunset.",
+    # Add more prompts as needed
+]
+
+# Function to run all prompts concurrently
+async def run_all_prompts(prompts):
+    tasks = [fetch_openai_response(prompt) for prompt in prompts]
+    responses = await asyncio.gather(*tasks)
+    return responses
+
+# Run the asynchronous function and get responses
+responses = asyncio.run(run_all_prompts(prompts))
+
+# Print out the responses
+print(responses)
